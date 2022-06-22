@@ -38,18 +38,17 @@ jobs:
           name: Terraform `destroy`
           command: terraform apply -destroy
 
-
-  workflows:
-    version: 2
-    terraform:
-      jobs:
-        - build
-        - terraform-plan
-        - terraform-apply:
-            requires:
-              - terraform-plan
-        - terraform-hold-destroy:
-            type: approval
-        - terraform-destroy:
-            requires:
-              - terraform-hold-destroy
+workflows:
+  version: 2
+  terraform:
+    jobs:
+      - build
+      - terraform-plan
+      - terraform-apply:
+          requires:
+            - terraform-plan
+      - terraform-hold-destroy:
+          type: approval
+      - terraform-destroy:
+          requires:
+            - terraform-hold-destroy
