@@ -1,12 +1,13 @@
 // --------------------------
 // Terraform AWS Demo Environment
-// <AWS_ACCESS_KEY>, <AWS_SECRET_KEY> stored against CircleCi env-var
+// Replace <AWS_ACCESS_KEY>, <AWS_SECRET_KEY>
 // Account IAM should have allow permission for sts:* Actions
 // --------------------------
 
-terraform {
+variable "AWS_ACCESS_KEY" {}
+variable "AWS_SECRET_KEY" {}
 
-  cloud {}
+terraform {
 
   required_providers {
     aws = {
@@ -17,10 +18,11 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
+
 provider "aws" {
   region  = "eu-west-1"
-  access_key = AWS_ACCESS_KEY
-  secret_key = AWS_SECRET_KEY
+  access_key = var.AWS_ACCESS_KEY
+  secret_key = var.AWS_SECRET_KEY
 }
 
 // VPC
