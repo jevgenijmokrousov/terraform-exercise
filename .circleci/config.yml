@@ -1,7 +1,6 @@
 version: 2
 
 jobs:
-  build:
   terraform-plan:
     working_directory: .
     docker:
@@ -42,7 +41,6 @@ workflows:
   version: 2
   terraform:
     jobs:
-      - build
       - terraform-plan
       - terraform-apply:
           requires:
