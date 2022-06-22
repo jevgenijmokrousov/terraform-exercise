@@ -2,7 +2,7 @@ version: 2
 
 jobs:
   terraform-plan:
-    working_directory: .
+    working_directory: ../
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
     steps:
@@ -15,7 +15,6 @@ jobs:
           root: .
           paths:
             - .
-            -
   terraform-apply:
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
