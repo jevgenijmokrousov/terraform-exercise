@@ -1,45 +1,33 @@
 version: 2
 
 jobs:
-  
-  terraform-apply:
+  build:
+  terraform-plan:
     working_directory: .
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - run:
+          name: Terrraform `init -> plan`
+          command: |
+            terraform init -input=false -upgrade
+            terraform plan -input=false
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+            -
+  terraform-apply:
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
     steps:
       - attach_workspace:
           at: .
       - run:
-          name: Terrraform `init - plan - apply`
+          name: Terrraform `apply`
           command: |
-            terraform init -input=false -upgrade
-            terraform plan -input=false
             terraform apply -input=false -auto-approve
             
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-  
-#  terraform-plan:
-#    docker:
-#      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-#    steps:
-#      - attach_workspace:
-#          at: .
-#      - run:
-#          name: Terraform `plan`
-#          command: terraform plan -out=planoutput -input=false
-#  terraform-apply:
-#    docker:
-#      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
-#    steps:
-#      - attach_workspace:
-#          at: .
-#      - run:
-#          name: Terraform `apply`
-#          command: terraform apply -input=false -auto-approve planoutput
-  
   terraform-destroy:
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
@@ -49,6 +37,19 @@ jobs:
       - run:
           name: Terraform `destroy`
           command: terraform apply -destroy
-  
-  
-  
+
+
+  workflows:
+    version: 2
+    terraform:
+      jobs:
+        - build
+        - terraform-plan
+        - terraform-apply:
+            requires:
+              - terraform-plan
+        - terraform-hold-destroy:
+            type: approval
+        - terraform-destroy:
+            requires:
+              - terraform-hold-destroy
