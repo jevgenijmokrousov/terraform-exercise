@@ -9,7 +9,8 @@ jobs:
       - run:
           name: Terrraform `init -> plan`
           command: |
-            cd ../
+            cd ~/app
+            ls -la 
             terraform init -input=false -upgrade
             terraform plan -input=false
       - persist_to_workspace:
