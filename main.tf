@@ -1,11 +1,14 @@
 // --------------------------
 // Terraform AWS Demo Environment
-// Replace <AWS_ACCESS_KEY>, <AWS_SECRET_KEY>
-// Account IAM should have allow permission for sts:* Actions
+// When run locally use terraform.tfvars and
+// via pipelines use Circleci env-var's for
+// <AWS_ACCESS_KEY_ID>, <AWS_SECRET_ACCESS_KEY>
+// AWS IAM should have allow permission for
+// sts:*, ec2:* and other essential actions
 // --------------------------
 
-variable "AWS_ACCESS_KEY" {}
-variable "AWS_SECRET_KEY" {}
+//variable "AWS_ACCESS_KEY_ID" {}
+//variable "AWS_SECRET_ACCESS_KEY" {}
 
 terraform {
 
@@ -21,8 +24,8 @@ terraform {
 
 provider "aws" {
   region  = "eu-west-1"
-  access_key = var.AWS_ACCESS_KEY
-  secret_key = var.AWS_SECRET_KEY
+  access_key = var.AWS_ACCESS_KEY_ID
+  secret_key = var.AWS_SECRET_ACCESS_KEY
 }
 
 // VPC
